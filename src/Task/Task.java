@@ -140,6 +140,8 @@ public class Task implements Runnable {
         return name;
     }
 
+    public double getProgress() { return progress / work * 100; }
+
     public int getRequiredWorkersCount() {
         return requiredWorkersCount;
     }
@@ -147,4 +149,7 @@ public class Task implements Runnable {
     public List<Worker> getWorkers() {
         return workers;
     }
+
+    public String getWorkersCount() { return String.format("%d/%d", requiredWorkersCount - semaphore.availablePermits(),
+            requiredWorkersCount); }
 }

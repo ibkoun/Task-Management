@@ -109,6 +109,14 @@ public class Server implements Runnable {
         return workers.size();
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public List<Worker> getWorkers() {
+        return workers;
+    }
+
     // Pick k workers at random from a pool of workers.
     public List<Worker> workersSampling(int k) {
         List<Worker> sample = new ArrayList<>();

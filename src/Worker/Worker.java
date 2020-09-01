@@ -107,6 +107,8 @@ public class Worker {
         return name;
     }
 
+    public double getPower() { return power; }
+
     @Override
     public String toString() {
         return name;
