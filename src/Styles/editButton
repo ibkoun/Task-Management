@@ -1,0 +1,20 @@
+// https://stackoverflow.com/questions/10518458/javafx-create-custom-button-with-image
+// Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+.button {
+    -fx-graphic:url('icons8-edit-24.png');
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    //-fx-background-image: url('icons8-edit-24.png');
+    //-fx-background-size: 24px;
+    //-fx-background-repeat: no-repeat;
+    //-fx-background-position: center;
+}
+
+.button:hover {
+    -fx-background-color: white;
+}
+
+.button:pressed {
+    -fx-background-color: grey;
+}
+

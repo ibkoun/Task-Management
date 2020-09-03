@@ -1,0 +1,14 @@
+// <a target="_blank" href="https://icons8.com/icons/set/long-arrow-left">Long Arrow Left icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+.button {
+    -fx-graphic:url('icons8-long-arrow-left-24.png');
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: white;
+}
+
+.button:pressed {
+    -fx-background-color: grey;
+}

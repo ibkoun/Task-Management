@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,7 +16,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Server implements Runnable {
     private int id;
     private String name;
-    private int totalTasksCount, totalWorkersCount;
+    private final AtomicInteger tasksCounter = new AtomicInteger();
+    private final AtomicInteger workersCounter = new AtomicInteger();
     private final List<Worker> workers = new ArrayList<>();
     private final List<Task> tasks = new ArrayList<>();
     private final Lock lock = new ReentrantLock();
@@ -39,7 +41,7 @@ public class Server implements Runnable {
                     emptyQueue.await();
                 }
                 Task task = tasks.get(0);
-                List<Worker> assignedWorkers = workersSampling(task.getRequiredWorkersCount());
+                List<Worker> assignedWorkers = workersSampling(task.getRequiredNumberOfWorkers());
                 System.out.printf("Assigning workers to %s...%n", task.getName());
                 for (Worker worker : assignedWorkers) {
                     task.assign(worker);
@@ -61,11 +63,10 @@ public class Server implements Runnable {
     }
 
     public void addTask(double work, int requiredWorkersCount) {
-        int taskId = totalTasksCount;
+        int taskId = tasksCounter.getAndIncrement();
         String taskName = "Task #" + taskId;
         Task task = new Task(taskId, taskName, work, requiredWorkersCount, this);
         tasks.add(task);
-        ++totalTasksCount;
         lock.lock();
         System.out.printf("%s was added.%n", task.getName());
         emptyQueue.signalAll();
@@ -79,11 +80,10 @@ public class Server implements Runnable {
     }
 
     public void addWorker(double power) {
-        int workerId = totalWorkersCount;
+        int workerId = workersCounter.getAndIncrement();
         String workerName = "Worker #" + workerId;
         Worker worker = new Worker(workerId, workerName, power, this);
         workers.add(worker);
-        ++totalWorkersCount;
         System.out.printf("%s was added.%n", worker.getName());
     }
 
@@ -139,5 +139,13 @@ public class Server implements Runnable {
             }
         }
         return sample;
+    }
+
+    public AtomicInteger getTasksCounter() {
+        return tasksCounter;
+    }
+
+    public AtomicInteger getWorkersCounter() {
+        return workersCounter;
     }
 }

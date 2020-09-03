@@ -10,12 +10,13 @@ import javafx.stage.Stage;
 // https://javafxpedia.com/en/tutorial/2229/tableview#:~:text=Add%20Button%20to%20Tableview,setCellFactory(Callback%20value)%20method.&text=In%20this%20application%20we%20are,selected%20and%20its%20information%20printed.
 // https://docs.oracle.com/javafx/2/ui_controls/table-view.htm
 public class Manager extends Application {
-    private Server server = new Server(0, "Server #0");
+    private Server server;
     private ServerView serverView;
     private final TabPane tabPane = new TabPane();
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
+        server = new Server(0, "Server");
         serverView = new ServerView(server);
         tabPane.getTabs().add(serverView.getTasksTab());
         tabPane.getTabs().add(serverView.getWorkersTab());

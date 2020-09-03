@@ -1,0 +1,13 @@
+.button {
+    -fx-graphic:url('icons8-plus-24.png');
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: white;
+}
+
+.button:pressed {
+    -fx-background-color: grey;
+}

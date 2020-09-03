@@ -12,7 +12,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Task implements Runnable {
-    private int id, requiredWorkersCount;
+    private final int id;
+    private int requiredNumberOfWorkers;
     private String name;
     private double work, progress;
     private final List<Worker> workers = new ArrayList<>();
@@ -26,7 +27,7 @@ public class Task implements Runnable {
         this.id = id;
         this.name = name;
         this.work = work;
-        this.requiredWorkersCount = requiredWorkerCount;
+        this.requiredNumberOfWorkers = requiredWorkerCount;
         this.server = server;
         semaphore = new Semaphore(requiredWorkerCount);
     }
@@ -140,16 +141,29 @@ public class Task implements Runnable {
         return name;
     }
 
+    public void setName(String name) { this.name = name; }
+
+    public double getWork() { return work; }
+
+    public void setWork(double work) { this.work = work; }
+
     public double getProgress() { return progress / work * 100; }
 
-    public int getRequiredWorkersCount() {
-        return requiredWorkersCount;
+    public int getRequiredNumberOfWorkers() {
+        return requiredNumberOfWorkers;
     }
+
+    public void setRequiredNumberOfWorkers(int requiredNumberOfWorkers) { this.requiredNumberOfWorkers = requiredNumberOfWorkers; }
 
     public List<Worker> getWorkers() {
         return workers;
     }
 
-    public String getWorkersCount() { return String.format("%d/%d", requiredWorkersCount - semaphore.availablePermits(),
-            requiredWorkersCount); }
+    public void setWorkers(List<Worker> workers) {
+        this.workers.clear();
+        this.workers.addAll(workers);
+    }
+
+    public String getWorkersCount() { return String.format("%d/%d", requiredNumberOfWorkers - semaphore.availablePermits(),
+            requiredNumberOfWorkers); }
 }
