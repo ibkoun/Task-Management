@@ -1,0 +1,4 @@
+.text-field {
+    -fx-focus-color: red;
+    -fx-faint-focus-color: #ff000022;
+}

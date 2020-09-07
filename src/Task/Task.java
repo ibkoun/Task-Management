@@ -164,6 +164,6 @@ public class Task implements Runnable {
         this.workers.addAll(workers);
     }
 
-    public String getWorkersCount() { return String.format("%d/%d", requiredNumberOfWorkers - semaphore.availablePermits(),
+    public String getNumberOfWorkers() { return String.format("%d/%d", requiredNumberOfWorkers - semaphore.availablePermits(),
             requiredNumberOfWorkers); }
 }

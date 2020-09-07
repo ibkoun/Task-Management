@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<TabPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Main.MainController">
+    <Tab text="Tasks" closable="false">
+        <BorderPane>
+            <center>
+                <TableView fx:id="tasksTableView" stylesheets="/Styles/tableView">
+                    <columns>
+                        <TableColumn fx:id="taskIdColumn" text="Id">
+                            <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="taskNameColumn" text="Name">
+                            <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="taskWorkColumn" text="Work">
+                            <cellValueFactory><PropertyValueFactory property="work"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="numberOfWorkersColumn" text="Number of workers">
+                            <cellValueFactory><PropertyValueFactory property="numberOfWorkers"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="progressColumn" text="Progress">
+                        </TableColumn>
+                    </columns>
+                </TableView>
+            </center>
+            <right>
+                <VBox>
+                    <Button fx:id="editTaskButton" stylesheets="/Styles/editButton">
+
+                    </Button>
+                    <Button fx:id="createTaskButton" stylesheets="/Styles/addButton">
+
+                    </Button>
+                    <Button fx:id="deleteTaskButton" stylesheets="/Styles/removeButton">
+
+                    </Button>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+    <Tab text="Workers" closable="false">
+        <BorderPane>
+            <center>
+                <TableView fx:id="workersTableView" stylesheets="/Styles/tableView">
+                    <columns>
+                        <TableColumn fx:id="workerIdColumn" text="Id">
+                            <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="workerNameColumn" text="Name">
+                            <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="workerPowerColumn" text="Power">
+                            <cellValueFactory><PropertyValueFactory property="power"/></cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+            </center>
+            <right>
+                <VBox>
+                    <Button fx:id="editWorkerButton" stylesheets="/Styles/editButton">
+
+                    </Button>
+                    <Button fx:id="createWorkerButton" stylesheets="/Styles/addButton">
+
+                    </Button>
+                    <Button fx:id="deleteWorkerButton" stylesheets="/Styles/removeButton">
+
+                    </Button>
+                </VBox>
+            </right>
+        </BorderPane>
+    </Tab>
+</TabPane>
