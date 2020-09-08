@@ -49,9 +49,19 @@
             <Label text="Assigned workers" GridPane.rowIndex="4" GridPane.columnIndex="0">
 
             </Label>
-            <ListView fx:id="workersListView" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                <ListView fx:id="workersListView">
 
-            </ListView>
+                </ListView>
+                <VBox spacing="10">
+                    <Button fx:id="addButton" stylesheets="/Styles/addButton">
+
+                    </Button>
+                    <Button fx:id="removeButton" stylesheets="/Styles/removeButton">
+
+                    </Button>
+                </VBox>
+            </HBox>
         </GridPane>
     </center>
     <bottom>

@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class CreateWorkerController {
     private MainController mainController;
-    private final ObservableList<Worker> tasksObservableList = FXCollections.observableArrayList();
+    private final ObservableList<Worker> workersObservableList = FXCollections.observableArrayList();
     private final String doubleRegex = "\\d+(.\\d+)?";
     private final SimpleBooleanProperty isNotDouble = new SimpleBooleanProperty();
 
@@ -30,7 +30,7 @@ public class CreateWorkerController {
     }
 
     public void initialize() {
-        tasksListView.setItems(tasksObservableList);
+        tasksListView.setItems(workersObservableList);
         setPowerTextField();
         setConfirmButton();
         setCancelButton();

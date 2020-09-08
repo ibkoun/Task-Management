@@ -87,10 +87,25 @@ public class Task implements Runnable {
         workers.add(worker);
     }
 
+    public void assign(List<Worker> workers) {
+        for (Worker worker : workers) {
+            worker.addTask(this);
+        }
+        this.workers.addAll(workers);
+    }
+
     // Remove this task from the worker.
     public void unassign(Worker worker) {
         worker.removeTask(this);
         workers.remove(worker);
+    }
+
+    public void unassign(List<Worker> workers) {
+        for (Worker worker : workers) {
+            worker.removeTask(this);
+        }
+        this.workers.addAll(workers);
+        this.workers.removeAll(workers);
     }
 
     // Increment the semaphore for each worker that has been reserved.
