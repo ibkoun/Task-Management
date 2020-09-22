@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+// TODO: Configure the disable property of buttons.
 public class MainController {
     private final Server server = new Server("Server");
 
