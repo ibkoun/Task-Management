@@ -20,24 +20,20 @@
                             <cellValueFactory><PropertyValueFactory property="work"/></cellValueFactory>
                         </TableColumn>
                         <TableColumn fx:id="numberOfWorkersColumn" text="Number of workers">
-                            <cellValueFactory><PropertyValueFactory property="numberOfWorkers"/></cellValueFactory>
+                            <cellValueFactory><PropertyValueFactory property="totalNumberOfWorkers"/></cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="progressColumn" text="Progress">
-                        </TableColumn>
+                        <TableColumn fx:id="progressColumn" text="Progress"/>
                     </columns>
                 </TableView>
             </center>
             <right>
                 <VBox>
-                    <Button fx:id="editTaskButton" stylesheets="/Styles/editButton">
-
-                    </Button>
-                    <Button fx:id="createTaskButton" stylesheets="/Styles/addButton">
-
-                    </Button>
-                    <Button fx:id="deleteTaskButton" stylesheets="/Styles/removeButton">
-
-                    </Button>
+                    <Button fx:id="editTaskButton" stylesheets="/Styles/editButton"/>
+                    <Button fx:id="createTaskButton" stylesheets="/Styles/addButton"/>
+                    <Button fx:id="deleteTaskButton" stylesheets="/Styles/removeButton"/>
+                    <Button fx:id="startTaskButton" stylesheets="/Styles/startButton"/>
+                    <Button fx:id="pauseTaskButton" stylesheets="/Styles/pauseButton"/>
+                    <Button fx:id="stopTaskButton" stylesheets="/Styles/stopButton"/>
                 </VBox>
             </right>
         </BorderPane>
@@ -61,15 +57,9 @@
             </center>
             <right>
                 <VBox>
-                    <Button fx:id="editWorkerButton" stylesheets="/Styles/editButton">
-
-                    </Button>
-                    <Button fx:id="createWorkerButton" stylesheets="/Styles/addButton">
-
-                    </Button>
-                    <Button fx:id="deleteWorkerButton" stylesheets="/Styles/removeButton">
-
-                    </Button>
+                    <Button fx:id="editWorkerButton" stylesheets="/Styles/editButton"/>
+                    <Button fx:id="createWorkerButton" stylesheets="/Styles/addButton"/>
+                    <Button fx:id="deleteWorkerButton" stylesheets="/Styles/removeButton"/>
                 </VBox>
             </right>
         </BorderPane>

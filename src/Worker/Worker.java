@@ -1,46 +1,107 @@
 package Worker;
 
+import Others.WorkerSnapshot;
 import Server.Server;
 import Task.Task;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Worker {
-    private int id;
-    private String name;
-    private double power;
-    private Task currentTask;
-    private final Map<Integer, Task> tasks = new HashMap<>();
+public class Worker extends ScheduledService<Void> {
     private Server server;
-    private ScheduledExecutorService scheduledExecutorService;
-    private boolean available;
+    private WorkerState state;
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final StringProperty name = new SimpleStringProperty();
+    private final DoubleProperty power = new SimpleDoubleProperty();
+    private final BooleanProperty availability = new SimpleBooleanProperty(true);
+    private Task currentTask;
+    private final ObservableList<Task> assignedTasks = FXCollections.observableArrayList();
     private final Lock lock = new ReentrantLock();
-    private final Condition availability = lock.newCondition();
+    private final Condition isAvailable = lock.newCondition();
 
-    public Worker(int id, String name, double power, Server server) {
-        this.id = id;
-        this.name = name;
-        this.power = power;
-        this.server = server;
-        available = true;
+    public Worker(Server server) {
+        setServer(server);
+        setId(server.getWorkersCounter().get());
+        setPeriod(Duration.seconds(1));
+        setCurrentState(new WorkerOnStandbyState(this));
     }
 
-    // Perform work for the current task.
-    public void start() {
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(() -> currentTask.load(power), 0, 1, TimeUnit.SECONDS);
+    public Worker(Server server, int id, String name, double power) {
+        setServer(server);
+        setId(id);
+        setName(name);
+        setPower(power);
+        setServer(server);
+        setPeriod(Duration.seconds(1));
+        setCurrentState(new WorkerOnStandbyState(this));
     }
 
-    // Pause the work for the current task.
-    public void stop() {
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();
+    @Override
+    protected javafx.concurrent.Task<Void> createTask() {
+        return new javafx.concurrent.Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (currentTask != null) {
+                    currentTask.load(power.get());
+                }
+                return null;
+            }
+        };
+    }
+
+    public void startWork() {
+        state.start();
+    }
+
+
+    public void stopWork() {
+        state.stop();
+    }
+
+
+    public void addTask(Task task) {
+        assignedTasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        assignedTasks.remove(task);
+    }
+
+    public void assignTask(Task task) {
+        task.addWorker(this);
+        addTask(task);
+    }
+
+    public void assignTasks(Collection<Task> tasks) {
+        for (Task task : tasks) {
+            assignTask(task);
+        }
+    }
+
+    public void unassignTask(Task task) {
+        task.removeWorker(this);
+        removeTask(task);
+    }
+
+    public void unassignTasks(Collection<Task> tasks) {
+        for (Task task : tasks) {
+            unassignTask(task);
+        }
+    }
+
+    public void unassignTasks() {
+        while (!assignedTasks.isEmpty()) {
+            Task task = assignedTasks.remove(0);
+            unassignTask(task);
         }
     }
 
@@ -49,14 +110,16 @@ public class Worker {
         lock.lock();
         try {
             // Wait until this worker is available.
-            while (!available) {
-                System.out.printf("%s is waiting for %s...%n", task.getName(), name);
-                availability.await();
+            if (!getAvailability()) {
+                System.out.printf("'%s' (task #%d) is waiting for '%s' (worker #%d)...%n", task.getName(), task.getId(), getName(), getId());
             }
-            available = false;
+            while (!getAvailability()) {
+                isAvailable.await();
+            }
+            setAvailability(false);
             setCurrentTask(task);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         } finally {
             lock.unlock();
         }
@@ -65,31 +128,58 @@ public class Worker {
     // Free this worker from the current task.
     public void release() {
         lock.lock();
-        if (currentTask.isFinished()) {
-            removeTask(currentTask);
-        }
-        else {
+        setAvailability(true);
+        isAvailable.signalAll();
+        if (currentTask != null) {
+            if (currentTask.isCompleted()) {
+                removeTask(currentTask);
+            }
             setCurrentTask(null);
         }
-        available = true;
-        availability.signalAll();
         lock.unlock();
     }
 
-    public void addTask(Task task) {
-        tasks.put(task.getId(), task);
+    public WorkerSnapshot createMemento() { return new WorkerSnapshot(this); }
+
+    public void update() {
+        server.setWorker(this);
     }
 
-    public void removeTask(Task task) {
-        tasks.remove(task.getId());
-        if (currentTask == task) {
-            setCurrentTask(null);
-        }
+    public Server getServer() {
+        return server;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public void setServer(Server server) {
+        this.server = server;
     }
+
+    public WorkerState getCurrentState() { return state; }
+
+    public void setCurrentState(WorkerState state) { this.state = state; }
+
+    public int getId() { return id.get(); };
+
+    public void setId(int id) { this.id.set(id); }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    public double getPower() { return power.get(); }
+
+    public void setPower(double power) {
+        this.power.set(power);
+    }
+
+    public boolean getAvailability() {
+        return availability.get();
+    }
+
+    public void setAvailability(boolean available) { availability.set(available);}
 
     public Task getCurrentTask() {
         return currentTask;
@@ -99,18 +189,28 @@ public class Worker {
         currentTask = task;
     }
 
-    public int getId() {
-        return id;
+    public IntegerProperty getIdProperty() { return id; }
+
+    public StringProperty getNameProperty() { return name; }
+
+    public DoubleProperty getPowerProperty() { return power; }
+
+    public BooleanProperty getAvailabilityProperty() { return availability; }
+
+    public ObservableList<Task> getAssignedTasks() {
+        return assignedTasks;
     }
 
-    public String getName() {
-        return name;
+    public void setAssignedTasks(Collection<Task> tasks) {
+        List<Task> unassignedTasks = new ArrayList<>(assignedTasks);
+        unassignedTasks.removeAll(tasks); // Keep all tasks that have not been assigned to this worker.
+        unassignTasks(unassignedTasks);
+        tasks.removeAll(assignedTasks); // Remove all tasks that have already been assigned to this worker.
+        assignTasks(tasks);
     }
-
-    public double getPower() { return power; }
 
     @Override
     public String toString() {
-        return name;
+        return name.get();
     }
 }

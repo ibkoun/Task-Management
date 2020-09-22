@@ -4,10 +4,6 @@
     -fx-graphic:url('icons8-edit-24.png');
     -fx-border-color: transparent;
     -fx-background-color: transparent;
-    //-fx-background-image: url('icons8-edit-24.png');
-    //-fx-background-size: 24px;
-    //-fx-background-repeat: no-repeat;
-    //-fx-background-position: center;
 }
 
 .button:hover {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Task.WorkerAssignmentController">
+    <center>
+        <HBox spacing="10" alignment="CENTER">
+            <padding><Insets top="10" right="10" bottom="5" left="10"/></padding>
+            <VBox spacing="10" alignment="CENTER">
+                <Label fx:id="assignedLabel" alignment="TOP_CENTER"/>
+                <ListView fx:id="assignedWorkersListView"/>
+            </VBox>
+            <VBox spacing="10" alignment="CENTER">
+                <Button fx:id="assignButton" stylesheets="/Styles/leftArrowButton"/>
+                <Button fx:id="unassignButton" stylesheets="/Styles/rightArrowButton"/>
+            </VBox>
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Unassigned"/>
+                <ListView fx:id="unassignedWorkersListView"/>
+            </VBox>
+        </HBox>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="BOTTOM_RIGHT">
+            <padding><Insets top="5" right="10" bottom="10" left="10"/></padding>
+            <Button fx:id="confirmButton" text="Confirm"/>
+            <Button fx:id="cancelButton" text="Cancel"/>
+        </HBox>
+    </bottom>
+</BorderPane>

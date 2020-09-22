@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Worker.WorkerController">
+    <center>
+        <GridPane vgap="10" hgap="10">
+            <padding><Insets top="10" right="5" bottom="5" left="10"/></padding>
+
+            <Label text="Id" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="idTextField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Name" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="nameTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" stylesheets="/Styles/defaultFieldFocus"/>
+
+            <Label text="Power" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.valignment="BASELINE"/>
+            <VBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.valignment="BASELINE">
+                <TextField fx:id="powerTextField" stylesheets="/Styles/defaultFieldFocus"/>
+                <Label fx:id="powerInputValidation" text="Invalid input" style="-fx-text-fill:red"/>
+            </VBox>
+
+            <Label text="Assigned tasks" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <HBox spacing="10" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                <ListView fx:id="tasksListView" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <VBox spacing="10">
+                    <Button fx:id="addButton" stylesheets="/Styles/addButton"/>
+                    <Button fx:id="removeButton" stylesheets="/Styles/removeButton"/>
+                </VBox>
+            </HBox>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="BOTTOM_RIGHT">
+            <padding><Insets top="5" right="10" bottom="10" left="10"/></padding>
+
+            <Button fx:id="confirmButton" text="Confirm"/>
+            <Button fx:id="cancelButton" text="Cancel"/>
+        </HBox>
+    </bottom>
+</BorderPane>

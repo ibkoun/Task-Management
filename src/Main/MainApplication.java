@@ -18,8 +18,8 @@ public class MainApplication extends Application {
         URL location = getClass().getResource("MainView.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(location);
         Parent root = fxmlLoader.load();
-        MainController mainController = fxmlLoader.getController();
-        mainController.setServer(new Server(UUID.randomUUID().toString(), "Server"));
+        //MainController mainController = fxmlLoader.getController();
+        //mainController.setServer(new Server("Server"));
         Scene scene = new Scene(root, 720, 720);
         primaryStage.setScene(scene);
         primaryStage.show();
