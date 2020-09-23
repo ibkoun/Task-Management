@@ -4,8 +4,8 @@ This is a program that simulates a server that handles tasks that require a numb
 # The main controller/view
 <div>
     <div class="row" align="center">
-        <img src="src/Main/main_controller_tasks_tab.png" width="250">
-        <img src="src/Main/main_controller_workers_tab.png" width="250">
+        <img src="src/Main/main_controller_tasks_tab.png" width="360">
+        <img src="src/Main/main_controller_workers_tab.png" width="360">
     </div>
     <figcaption>
         <p align="justify">
@@ -17,8 +17,8 @@ This is a program that simulates a server that handles tasks that require a numb
 # The task's controller/view
 <div align="center">
     <div class="row" align="center">
-        <img src="src/Task/task_controller.png" width="250">
-        <img src="src/Task/worker_assignment_controller.png" width="250">
+        <img src="src/Task/task_controller.png" width="360">
+        <img src="src/Task/worker_assignment_controller.png" width="360">
     </div>
     <figcaption>
         <p align="justify">
@@ -30,8 +30,8 @@ This is a program that simulates a server that handles tasks that require a numb
 # The worker's controller/view
 <div align="center">
     <div class="row" align="center">
-        <img src="src/Worker/worker_controller.png" width="250">
-        <img src="src/Worker/task_assignment_controller.png" width="250">
+        <img src="src/Worker/worker_controller.png" width="360">
+        <img src="src/Worker/task_assignment_controller.png" width="360">
     </div>
     <figcaption>
         <p align="justify">
