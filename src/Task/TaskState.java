@@ -1,5 +1,8 @@
 package Task;
 
+/**
+ * Represents the state of a task object.
+ */
 public interface TaskState {
     void start();
     void pause();

@@ -34,10 +34,6 @@ public class WorkerController {
     @FXML
     private Button addButton, removeButton, confirmButton, cancelButton;
 
-    public void initialize() {
-
-    }
-
     public Worker getWorker() { return worker; }
 
     public void setWorker(Worker worker) { this.worker = worker; }
@@ -46,9 +42,13 @@ public class WorkerController {
         return state;
     }
 
+    public void setState(WorkerControllerState state) {
+        this.state = state;
+    }
+
     public void saveState() {
         if (worker != null) {
-            snapshot = worker.createMemento();
+            snapshot = worker.createSnapshot();
         }
     }
 
@@ -58,8 +58,7 @@ public class WorkerController {
         }
     }
 
-    public void setState(WorkerControllerState state) {
-        this.state = state;
+    public void setComponents() {
         tasksListView.setItems(worker.getAssignedTasks());
         setIdTextField();
         setNameTextField();

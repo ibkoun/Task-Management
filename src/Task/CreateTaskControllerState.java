@@ -55,7 +55,6 @@ public class CreateTaskControllerState implements TaskControllerState {
             task.setName(name);
             task.setWork(work);
             task.setRequiredNumberOfWorkers(requiredNumberOfWorkers);
-            //task.assignWorkers(controller.getTask().getWorkers());
             server.addTask(task);
             server.setWorkers(task.getAssignedWorkers());
             ((Stage) confirmButton.getScene().getWindow()).close();
@@ -70,15 +69,6 @@ public class CreateTaskControllerState implements TaskControllerState {
             Task task = controller.getTask();
             Server server = task.getServer();
             server.setWorkers(task.getAssignedWorkers());
-            /*Task task = controller.getTask();
-            Server server = task.getServer();
-
-            List<Worker> unassignedWorkers = new ArrayList<>(task.getAssignedWorkers());
-            unassignedWorkers.removeAll(controller.getWorkers());
-            task.unassignWorkers(unassignedWorkers);
-
-            server.setWorkers(task.getAssignedWorkers());
-            server.setWorkers(unassignedWorkers);*/
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
     }

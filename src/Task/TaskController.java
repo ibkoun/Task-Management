@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Controller for the task model and its view.
+ */
 public class TaskController {
     private Task task;
     private TaskControllerState state;
@@ -35,8 +38,10 @@ public class TaskController {
     @FXML
     private Button addButton, removeButton, confirmButton, cancelButton;
 
-    public void initialize() {
+    public Task getTask() { return task; }
 
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public TaskControllerState getState() {
@@ -45,6 +50,21 @@ public class TaskController {
 
     public void setState(TaskControllerState state) {
         this.state = state;
+    }
+
+    public void saveState() {
+        if (task != null) {
+            snapshot = task.createSnapshot();
+        }
+    }
+
+    public void loadState() {
+        if (snapshot != null) {
+            snapshot.restore();
+        }
+    }
+
+    public void setComponents() {
         workersListView.setItems(task.getAssignedWorkers());
         setIdTextField();
         setNameTextField();
@@ -57,22 +77,6 @@ public class TaskController {
         setRemoveButton();
         setConfirmButton();
         setCancelButton();
-    }
-
-    public Task getTask() { return task; }
-
-    public void setTask(Task task) { this.task = task; }
-
-    public void saveState() {
-        if (task != null) {
-            snapshot = task.createSnapshot();
-        }
-    }
-
-    public void loadState() {
-        if (snapshot != null) {
-            snapshot.restore();
-        }
     }
 
     public ObservableList<Worker> getWorkers() { return workers; }
@@ -175,7 +179,6 @@ public class TaskController {
                 WorkerAssignmentController controller = fxmlLoader.getController();
                 task.setRequiredNumberOfWorkers(Integer.parseInt(getRequiredNumberOfWorkersTextField().getText()));
                 controller.setTask(task);
-                //controller.setMaxNumberOfWorkers(Integer.parseInt(requiredNumberOfWorkersTextField.getText()));
                 controller.setAssignedWorkers(task.getAssignedWorkers());
                 controller.setUnassignedWorkers(task.getServer().getWorkers());
                 controller.setAssignedLabel();

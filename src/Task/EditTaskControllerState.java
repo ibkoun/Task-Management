@@ -55,17 +55,8 @@ public class EditTaskControllerState implements TaskControllerState {
             int requiredNumberOfWorkers = Integer.parseInt(requiredNumberOfWorkersTextField.getText());
             task.setRequiredNumberOfWorkers(requiredNumberOfWorkers);
 
-            /*List<Worker> assignedWorkers = new ArrayList<>(controller.getTask().getWorkers());
-            assignedWorkers.removeAll(task.getWorkers());
-            task.assignWorkers(assignedWorkers);
-            server.setWorkers(assignedWorkers);
-
-            List<Worker> unassignedWorkers = new ArrayList<>(task.getWorkers());
-            unassignedWorkers.removeAll(controller.getTask().getWorkers());
-            task.unassignWorkers(unassignedWorkers);*/
             server.setWorkers(task.getAssignedWorkers());
             task.update();
-
             ((Stage) confirmButton.getScene().getWindow()).close();
         });
     }
@@ -78,16 +69,6 @@ public class EditTaskControllerState implements TaskControllerState {
             Task task = controller.getTask();
             Server server = task.getServer();
             server.setWorkers(task.getAssignedWorkers());
-            /*Task task = controller.getTask();
-            Server server = task.getServer();
-
-            List<Worker> unassignedWorkers = new ArrayList<>(task.getAssignedWorkers());
-            unassignedWorkers.removeAll(controller.getWorkers());
-            task.unassignWorkers(unassignedWorkers);
-
-            server.setWorkers(task.getAssignedWorkers());
-            server.setWorkers(unassignedWorkers);*/
-
             task.update();
             ((Stage) cancelButton.getScene().getWindow()).close();
         });

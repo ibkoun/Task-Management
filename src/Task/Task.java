@@ -17,6 +17,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Represents a simple job that requires an amount of work.
+ */
 public class Task {
     private Server server;
     private TaskState state;
@@ -36,6 +39,10 @@ public class Task {
     private final Service<Void> allocationService = new PreparationService(this);
     private final Service<Void> launchingService = new LaunchingService(this);
 
+    /**
+     * Represents a simple job that requires an amount of work.
+     * @param server The server that contains this task.
+     */
     public Task(Server server) {
         setServer(server);
         setState(new OnStandbyTaskState(this));
@@ -43,6 +50,14 @@ public class Task {
         progressIndicator.progressProperty().bind(workProgress);
     }
 
+    /**
+     * Represents a simple job that requires an amount of work.
+     * @param server The server that contains this task.
+     * @param id The unique integer identifier.
+     * @param name The string to display when printing.
+     * @param work The amount of work required to accomplish this task.
+     * @param requiredNumberOfWorkers The number of workers needed to accomplish this task.
+     */
     public Task(Server server, int id, String name, double work, int requiredNumberOfWorkers) {
         setServer(server);
         setState(new OnStandbyTaskState(this));
@@ -53,7 +68,9 @@ public class Task {
         progressIndicator.progressProperty().bind(workProgress);
     }
 
-    // Service for allocating workers to the task.
+    /**
+     * Service for allocating workers to this task.
+     */
     public class PreparationService extends Service<Void> {
         private final Task task;
 
@@ -85,7 +102,9 @@ public class Task {
         }
     }
 
-    // Service for launching the task after allocating the workers.
+    /**
+     * Service for starting this task after allocating the workers.
+     */
     public class LaunchingService extends Service<Void> {
         private final Task task;
 
@@ -151,7 +170,10 @@ public class Task {
         return state.isRunning();
     }
 
-    // Increment the progress of this task.
+    /**
+     * Increment the progress of this task.
+     * @param amount The quantity of work provided by a worker.
+     */
     public void load(double amount) {
         lock.lock();
         if (isCompleted()) {
@@ -163,6 +185,7 @@ public class Task {
         lock.unlock();
     }
 
+    // Service related methods.
     public void startPreparationService() {
         if (!allocationService.isRunning()) {
             allocationService.start();
@@ -216,8 +239,11 @@ public class Task {
         }
     }
 
+    // Worker related methods.
     public void startWorker(Worker worker) {
-        worker.startWork();
+        if (worker != null) {
+            worker.startWork();
+        }
     }
 
     public void startWorkers() {
@@ -227,7 +253,9 @@ public class Task {
     }
 
     public void stopWorker(Worker worker) {
-        worker.stopWork();
+        if (worker != null) {
+            worker.stopWork();
+        }
     }
 
     public void stopWorkers() {
@@ -246,28 +274,51 @@ public class Task {
         setTotalNumberOfWorkers();
     }
 
+    /**
+     * @param worker The worker who will participate in this task.
+     */
     public void assignWorker(Worker worker) {
-        worker.addTask(this);
-        addWorker(worker);
+        if (worker != null) {
+            worker.addTask(this);
+            addWorker(worker);
+        }
     }
 
+    /**
+     * @param workers The list of workers who will participate in this task.
+     */
     public void assignWorkers(Collection<Worker> workers) {
-        for (Worker worker : workers) {
-            assignWorker(worker);
+        if (workers != null) {
+            for (Worker worker : workers) {
+                assignWorker(worker);
+            }
         }
     }
 
+    /**
+     * @param worker The worker who will no longer participate in this task.
+     */
     public void unassignWorker(Worker worker) {
-        worker.removeTask(this);
-        removeWorker(worker);
-    }
-
-    public void unassignWorkers(Collection<Worker> workers) {
-        for (Worker worker : workers) {
-            unassignWorker(worker);
+        if (worker != null) {
+            worker.removeTask(this);
+            removeWorker(worker);
         }
     }
 
+    /**
+     * @param workers The list of workers who will no longer participate in this task.
+     */
+    public void unassignWorkers(Collection<Worker> workers) {
+        if (workers != null) {
+            for (Worker worker : workers) {
+                unassignWorker(worker);
+            }
+        }
+    }
+
+    /**
+     * Clears the list of workers assigned to this task. Also removes this task from the workers.
+     */
     public void unassignWorkers() {
         while (!assignedWorkers.isEmpty()) {
             Worker worker = assignedWorkers.remove(0);
@@ -275,7 +326,9 @@ public class Task {
         }
     }
 
-    // Increment the semaphore for each worker that has been reserved.
+    /**
+     * @param worker The worker that this task will reserve.
+     */
     public void acquireWorker(Worker worker) {
         executorService.execute(() -> {
             try {
@@ -291,23 +344,33 @@ public class Task {
             }
         });
     }
+
+    /**
+     * Reserves all the workers currently assigned to this task.
+     */
     public void acquireWorkers() {
         for (Worker worker : assignedWorkers) {
             acquireWorker(worker);
         }
     }
 
-    // Decrement the semaphore for each worker that has been dismissed.
+    /**
+     * @param worker The worker who will be released from this task.
+     */
     public void releaseWorker(Worker worker) {
         executorService.execute(() -> {
             if (worker.getCurrentTask() != null && worker.getCurrentTask().getId() == getId()) {
-                System.out.printf("'%s' (task #%d) released '%s' (worker #%d).%n", getName(), getId(), worker.getName(), worker.getId());
+                System.out.printf("'%s' (task #%d) released '%s' (worker #%d).%n",
+                        getName(), getId(), worker.getName(), worker.getId());
                 worker.release();
                 semaphore.release();
             }
         });
     }
 
+    /**
+     * Releases all the workers currently assigned to this task.
+     */
     public void releaseWorkers() {
         for (Worker worker : assignedWorkers) {
             releaseWorker(worker);
@@ -323,11 +386,17 @@ public class Task {
         countDownLatch = new CountDownLatch(getNumberOfMissingWorkers());
     }
 
+    /**
+     * Store the current state of this task.
+     * */
+    public TaskSnapshot createSnapshot() { return new TaskSnapshot(this); }
+
+    /**
+     * Notify the server that the state of this task has changed.
+     * */
     public void update() {
         server.setTask(this);
     }
-
-    public TaskSnapshot createSnapshot() { return new TaskSnapshot(this); }
 
     public boolean isReady() {
         return semaphore.availablePermits() == 0;
@@ -337,6 +406,7 @@ public class Task {
         return progressIndicator.getProgress() == 1.0;
     }
 
+    // Getters and setters.
     public Server getServer() { return server; }
 
     public void setServer(Server server) { this.server = server; }
@@ -398,11 +468,15 @@ public class Task {
 
     public ObservableList<Worker> getAssignedWorkers() { return assignedWorkers; }
 
+    /**
+     * Assigns new workers to this task and removes the previous ones.
+     * @param workers The new list of workers that will be assigned to this worker.
+     */
     public void setAssignedWorkers(Collection<Worker> workers) {
         List<Worker> unassignedWorkers = new ArrayList<>(assignedWorkers);
-        unassignedWorkers.removeAll(workers); // Keep all workers assigned to this task.
+        unassignedWorkers.removeAll(workers); // Keeps all workers assigned to this task.
         unassignWorkers(unassignedWorkers);
-        workers.removeAll(assignedWorkers); // Remove all workers already assigned to this task.
+        workers.removeAll(assignedWorkers); // Removes all workers already assigned to this task.
         assignWorkers(workers);
     }
 
@@ -418,6 +492,7 @@ public class Task {
 
     public Service<Void> getLaunchingService() { return launchingService; }
 
+    // Defines how this object will be displayed in a list.
     @Override
     public String toString() {
         return String.format("%s (%d/%d)", getName(), assignedWorkers.size(), getRequiredNumberOfWorkers());

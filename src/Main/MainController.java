@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-// TODO: Configure the disable property of buttons.
+// TODO: Configure the disable property of buttons based on the state of the task/worker.
+// TODO: Add a way to display the selected task/worker other than the edit view.
+// TODO: Display the start/end time and the duration of each task.
+// TODO: Show the status of each worker (available, busy, etc.).
 public class MainController {
     private final Server server = new Server("Server");
 
@@ -136,6 +139,7 @@ public class MainController {
                     controller.setTask(getSelectedTask());
                     controller.setState(new EditTaskControllerState(controller));
                     controller.saveState();
+                    controller.setComponents();
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
                     stage.setScene(scene);
@@ -157,6 +161,7 @@ public class MainController {
                 controller.setTask(new Task(server));
                 controller.setState(new CreateTaskControllerState(controller));
                 controller.saveState();
+                controller.setComponents();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
                 stage.setScene(scene);
@@ -204,7 +209,6 @@ public class MainController {
     }
 
     public void setStopTaskButton() {
-        //stopTaskButton.setDisable(true);
         stopTaskButton.setOnAction(event -> {
             startTaskButton.setDisable(false);
             pauseTaskButton.setDisable(true);
@@ -247,6 +251,7 @@ public class MainController {
                 controller.setWorker(getSelectedWorker());
                 controller.setState(new EditWorkerControllerState(controller));
                 controller.saveState();
+                controller.setComponents();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
                 stage.setScene(scene);
@@ -267,6 +272,7 @@ public class MainController {
                 controller.setWorker(new Worker(server));
                 controller.setState(new CreateWorkerControllerState(controller));
                 controller.saveState();
+                controller.setComponents();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
                 stage.setScene(scene);

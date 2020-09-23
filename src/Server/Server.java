@@ -21,13 +21,16 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Database for the worker and the task objects.
+ */
 public class Server {
     private final StringProperty id = new SimpleStringProperty();
     private final StringProperty name = new SimpleStringProperty();
-    private final AtomicInteger workersCounter = new AtomicInteger(); // Count the total number of workers.
+    private final AtomicInteger workersCounter = new AtomicInteger(); // Counts the total number of workers.
     private final ObservableList<Worker> workers = FXCollections.observableArrayList();
     private final Map<Integer, Integer> workersMap = new HashMap<>(); // Mapping of the position of the workers in the observable list.
-    private final AtomicInteger tasksCounter = new AtomicInteger(); // Count the total number of tasks.
+    private final AtomicInteger tasksCounter = new AtomicInteger(); // Counts the total number of tasks.
     private final ObservableList<Task> tasks =
             FXCollections.observableArrayList(task -> new Observable[] { task.getWorkProgressProperty() });
     private final Map<Integer, Integer> tasksMap = new HashMap<>(); // Mapping of the position of the task in the observable list.
@@ -37,12 +40,17 @@ public class Server {
     private final Lock lock = new ReentrantLock();
     private final Condition allocation = lock.newCondition();
 
+    /**
+     * Database for the worker and the task objects.
+     */
     public Server(String name) {
         setId(UUID.randomUUID().toString());
         setName(name);
     }
 
-    // Service for assigning workers to pending tasks.
+    /**
+     * Service for allocating workers to pending tasks.
+     */
     public class AllocationService extends Service<Void> {
         public AllocationService() {
             setOnSucceeded(event -> {
@@ -80,14 +88,18 @@ public class Server {
         }
     }
 
-    // Method to start the server.
+    /**
+     * Method to start the server.
+     */
     public void start() {
         if (!allocationService.isRunning()) {
             allocationService.start();
         }
     }
 
-    // Method to stop the server.
+    /**
+     * Method to stop the server.
+     */
     public void stop() {
         if (allocationService.isRunning()) {
             if (allocationService.cancel()) {
@@ -96,33 +108,44 @@ public class Server {
         }
     }
 
+    /**
+     * Queue a task for each of its assigned workers.
+     * @param task The task that will wait in the queue.
+     */
     public void allocateWorkers(Task task) {
         lock.lock();
-        for (Worker worker : task.getAssignedWorkers()) {
-            if (!workersPool.get(worker.getId()).contains(task)) {
-                workersPool.get(worker.getId()).add(task);
-                unallocatedWorkers.add(worker);
+        if (task != null) {
+            for (Worker worker : task.getAssignedWorkers()) {
+                if (!workersPool.get(worker.getId()).contains(task)) {
+                    workersPool.get(worker.getId()).add(task);
+                    unallocatedWorkers.add(worker);
+                }
             }
+            allocation.signal();
         }
-        allocation.signal();
         lock.unlock();
     }
 
+    // Worker related methods.
     public void addWorker(Worker worker) {
-        int workerId = worker.getId();
-        workersMap.put(workerId, workersCounter.getAndIncrement());
-        workersPool.put(workerId, new LinkedList<>());
-        workers.add(worker);
+        if (worker != null) {
+            int workerId = worker.getId();
+            workersMap.put(workerId, workersCounter.getAndIncrement());
+            workersPool.put(workerId, new LinkedList<>());
+            workers.add(worker);
+        }
     }
 
     public void addWorkers(Collection<Worker> workers) {
-        for (Worker worker : workers) {
-            addWorker(worker);
+        if (workers != null) {
+            for (Worker worker : workers) {
+                addWorker(worker);
+            }
         }
     }
 
     public void removeWorker(Worker worker) {
-        if (!worker.isRunning()) {
+        if (worker != null && !worker.isRunning()) {
             int workerId = worker.getId();
             int index = workersMap.remove(workerId);
             workers.remove(index);
@@ -136,19 +159,25 @@ public class Server {
     }
 
     public void removeWorkers(Collection<Worker> workers) {
-        for (Worker worker : workers) {
-            removeWorker(worker);
+        if (workers != null) {
+            for (Worker worker : workers) {
+                removeWorker(worker);
+            }
         }
     }
 
     public void setWorker(Worker worker) {
-        int index = workersMap.get(worker.getId());
-        workers.set(index, worker);
+        if (worker != null) {
+            int index = workersMap.get(worker.getId());
+            workers.set(index, worker);
+        }
     }
 
     public void setWorkers(Collection<Worker> workers) {
-        for (Worker worker : workers) {
-            setWorker(worker);
+        if (workers != null) {
+            for (Worker worker : workers) {
+                setWorker(worker);
+            }
         }
     }
 
@@ -161,19 +190,24 @@ public class Server {
         workersMap.put(wj.getId(), i);
     }
 
+    // Task related methods.
     public void addTask(Task task) {
-        tasksMap.put(task.getId(), tasksCounter.getAndIncrement());
-        tasks.add(task);
+        if (task != null) {
+            tasksMap.put(task.getId(), tasksCounter.getAndIncrement());
+            tasks.add(task);
+        }
     }
 
     public void addTasks(Collection<Task> tasks) {
-        for (Task task : tasks) {
-            addTask(task);
+        if (tasks != null) {
+            for (Task task : tasks) {
+                addTask(task);
+            }
         }
     }
 
     public void removeTask(Task task) {
-        if (!task.isRunning()) {
+        if (task != null && !task.isRunning()) {
             int index = tasksMap.remove(task.getId());
             tasks.remove(index);
             tasksCounter.decrementAndGet();
@@ -185,19 +219,25 @@ public class Server {
     }
 
     public void removeTasks(Collection<Task> tasks) {
-        for (Task task : tasks) {
-            removeTask(task);
+        if (tasks != null) {
+            for (Task task : tasks) {
+                removeTask(task);
+            }
         }
     }
 
     public void setTask(Task task) {
-        int index = tasksMap.get(task.getId());
-        tasks.set(index, task);
+        if (task != null) {
+            int index = tasksMap.get(task.getId());
+            tasks.set(index, task);
+        }
     }
 
     public void setTasks(Collection<Task> tasks) {
-        for (Task task : tasks) {
-            setTask(task);
+        if (tasks != null) {
+            for (Task task : tasks) {
+                setTask(task);
+            }
         }
     }
 
@@ -210,6 +250,7 @@ public class Server {
         tasksMap.put(tj.getId(), i);
     }
 
+    // Getters and setters.
     public String getId() { return id.get(); }
 
     public void setId(String id) { this.id.set(id); }

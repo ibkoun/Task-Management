@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
+/**
+ * Controller for assigning workers to a task.
+ */
 public class WorkerAssignmentController {
     private Task task;
     private final ObservableList<Worker> assignedWorkers = FXCollections.observableArrayList();
@@ -66,7 +69,7 @@ public class WorkerAssignmentController {
     }
 
     public void setUnassignButton() {
-        // Disable this button if the list of assigned workers is empty.
+        // Disable this button if the list of assigned workers is empty or if no model from the list is selected.
         unassignButton.disableProperty().bind(Bindings.size(assignedWorkers).isEqualTo(0)
                 .or(assignedWorkersListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1)));
         unassignButton.setOnAction(event -> {

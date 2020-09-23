@@ -48,14 +48,6 @@ public class EditWorkerControllerState implements WorkerControllerState {
             double power = Double.parseDouble(powerTextField.getText());
             worker.setPower(power);
 
-            /*List<Task> assignedTasks = new ArrayList<>(controller.getWorker().getTasks()); // Updated list of assigned tasks.
-            assignedTasks.removeAll(worker.getTasks()); // Remove all tasks from the new list of assigned tasks that were present in the old list.
-            worker.assignTasks(assignedTasks); // Add tasks that were absent from the old list of assigned tasks.
-            server.setTasks(assignedTasks);
-
-            List<Task> unassignedTasks = new ArrayList<>(worker.getTasks()); // Updated list of unassigned task.
-            unassignedTasks.removeAll(controller.getWorker().getTasks()); // Remove all tasks from the new list of unassigned tasks that were present in the old list.
-            worker.unassignTasks(unassignedTasks); // Remove tasks that were absent from the old list of unassigned tasks.*/
             server.setTasks(worker.getAssignedTasks());
             worker.update();
             ((Stage)confirmButton.getScene().getWindow()).close();
@@ -70,16 +62,6 @@ public class EditWorkerControllerState implements WorkerControllerState {
             Worker worker = controller.getWorker();
             Server server = worker.getServer();
             server.setTasks(worker.getAssignedTasks());
-            /*Worker worker = controller.getWorker();
-            Server server = worker.getServer();
-
-            List<Task> unassignedTasks = new ArrayList<>(worker.getAssignedTasks());
-            unassignedTasks.removeAll(controller.getTasks());
-            worker.unassignTasks(unassignedTasks);
-
-            server.setTasks(worker.getAssignedTasks());
-            server.setTasks(unassignedTasks);*/
-
             worker.update();
             ((Stage) cancelButton.getScene().getWindow()).close();
         });

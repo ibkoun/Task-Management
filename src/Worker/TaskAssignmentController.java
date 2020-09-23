@@ -9,6 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
+// TODO: Change the string displayed for the task object.
+/**
+ * Controller for assigning tasks to a worker.
+ */
 public class TaskAssignmentController {
     private Worker worker;
     private final ObservableList<Task> assignedTasks = FXCollections.observableArrayList();
@@ -20,7 +24,6 @@ public class TaskAssignmentController {
     private Button assignButton, unassignButton, confirmButton, cancelButton;
 
     public void initialize() {
-        unassignedTasksListView.setItems(unassignedTasks);
         setConfirmButton();
         setCancelButton();
     }
@@ -28,19 +31,22 @@ public class TaskAssignmentController {
     public void setWorker(Worker worker) { this.worker = worker; }
 
     public void setAssignedTasks(ObservableList<Task> tasks) {
-        assignedTasks.addAll(tasks);
+        assignedTasks.addAll(tasks); // Retrieve the list of tasks that have been assigned to this worker.
         assignedTasksListView.setItems(assignedTasks);
         setAssignButton();
     }
 
     public void setUnassignedTasks(ObservableList<Task> tasks) {
-        for (Task task : tasks) {
-            if (!task.isCompleted() && task.getAssignedWorkers().size() < task.getRequiredNumberOfWorkers()) {
-                unassignedTasks.add(task);
+        if (tasks != null) {
+            for (Task task : tasks) {
+                if (!task.isCompleted() && task.getAssignedWorkers().size() < task.getRequiredNumberOfWorkers()) {
+                    unassignedTasks.add(task); // Retrieve the task that have not been assigned to this worker.
+                }
             }
+            unassignedTasks.removeAll(assignedTasks);
+            unassignedTasksListView.setItems(unassignedTasks);
+            setUnassignButton();
         }
-        unassignedTasks.removeAll(assignedTasks);
-        setUnassignButton();
     }
 
     public void setAssignButton() {

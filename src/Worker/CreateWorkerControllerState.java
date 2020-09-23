@@ -48,7 +48,6 @@ public class CreateWorkerControllerState implements WorkerControllerState {
             worker.setId(id);
             worker.setName(name);
             worker.setPower(power);
-            //worker.assignTasks(controller.getWorker().getTasks());
             server.addWorker(worker);
             server.setTasks(worker.getAssignedTasks());
             ((Stage)confirmButton.getScene().getWindow()).close();
@@ -63,14 +62,6 @@ public class CreateWorkerControllerState implements WorkerControllerState {
             Worker worker = controller.getWorker();
             Server server = worker.getServer();
             server.setTasks(worker.getAssignedTasks());
-            /*Server server = worker.getServer();
-
-            List<Task> unassignedTasks = new ArrayList<>(worker.getAssignedTasks());
-            unassignedTasks.removeAll(controller.getTasks());
-            worker.unassignTasks(unassignedTasks);
-
-            server.setTasks(worker.getAssignedTasks());
-            server.setTasks(unassignedTasks);*/
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
     }
