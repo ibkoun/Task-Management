@@ -1,5 +1,5 @@
 # Overview
-This is a program that simulates a server that handles tasks that require a number of workers.
+This is a program that simulates a server that handles tasks that require a number of workers. This project was developed on the **IntelliJ IDEA Community Edition**.
 
 # The main controller/view
 <div>
