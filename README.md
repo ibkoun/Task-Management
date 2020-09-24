@@ -9,7 +9,7 @@ This is a program that simulates a server that handles tasks that require a numb
     </div>
     <figcaption>
         <p align="justify">
-            <b>Figure 1. The view of the application.</b> The tab containing a table view of tasks (left) and the tab containing the table view of workers (right).
+            <b>Figure 1. The view of the application.</b> The tab containing the table view of tasks (left) and the tab containing the table view of workers (right).
         </p>
     </figcaption>
 </div>
