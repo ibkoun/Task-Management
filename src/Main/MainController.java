@@ -57,7 +57,6 @@ public class MainController {
     @FXML
     private Button stopTaskButton;
 
-
     // Workers section.
     @FXML
     private TableView<Worker> workersTableView;
@@ -94,6 +93,7 @@ public class MainController {
     }
 
     public void setTasksTableView() {
+        // Set the disable property of buttons based on the selected task.
         tasksTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue.isCompleted()) {
@@ -111,12 +111,20 @@ public class MainController {
             }
         });
 
+        // Set the disable property of the buttons based on whether the selected task has changed or not.
         tasksTableView.getItems().addListener((ListChangeListener<Task>) c -> {
             while (c.next()) {
                 if (c.wasUpdated()) {
                     Task task = getSelectedTask();
-                    // Disable these buttons when the selected task is completed.
-                    if (task.isCompleted()) {
+                    if (task != null && task.isCompleted()) {
+                        editTaskButton.setDisable(true);
+                        startTaskButton.setDisable(true);
+                        pauseTaskButton.setDisable(true);
+                        stopTaskButton.setDisable(true);
+                    }
+                }
+                else if (c.wasRemoved()) {
+                    if (tasksTableView.getItems().isEmpty()) {
                         editTaskButton.setDisable(true);
                         startTaskButton.setDisable(true);
                         pauseTaskButton.setDisable(true);
@@ -128,6 +136,7 @@ public class MainController {
     }
 
     public void setEditTaskButton() {
+        editTaskButton.setDisable(true);
         editTaskButton.setOnAction(event -> {
             try {
                 Task task = getSelectedTask();
@@ -185,6 +194,7 @@ public class MainController {
     }
 
     public void setStartTaskButton() {
+        startTaskButton.setDisable(true);
         startTaskButton.setOnAction(event -> {
             startTaskButton.setDisable(true);
             pauseTaskButton.setDisable(false);
@@ -197,6 +207,7 @@ public class MainController {
     }
 
     public void setPauseTaskButton() {
+        pauseTaskButton.setDisable(true);
         pauseTaskButton.setOnAction(event -> {
             startTaskButton.setDisable(false);
             pauseTaskButton.setDisable(true);
@@ -209,12 +220,15 @@ public class MainController {
     }
 
     public void setStopTaskButton() {
+        stopTaskButton.setDisable(true);
         stopTaskButton.setOnAction(event -> {
             startTaskButton.setDisable(false);
             pauseTaskButton.setDisable(true);
             stopTaskButton.setDisable(true);
             Task task = getSelectedTask();
-            task.stop();
+            if (task != null) {
+                task.stop();
+            }
         });
     }
 
@@ -255,6 +269,8 @@ public class MainController {
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
                 stage.setScene(scene);
+                stage.initOwner(createWorkerButton.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
