@@ -225,4 +225,8 @@ public class TaskController {
     public void setCancelButton() {
         state.setCancelButton();
     }
+
+    public Label getWorkInputValidation() { return workInputValidation; }
+
+    public Label getRequiredNumberOfWorkersInputValidation() { return requiredNumberOfWorkersInputValidation; }
 }

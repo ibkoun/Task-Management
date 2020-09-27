@@ -135,6 +135,8 @@ public class MainController {
         });
     }
 
+    public Button getEditTaskButton() { return editTaskButton; }
+
     public void setEditTaskButton() {
         editTaskButton.setDisable(true);
         editTaskButton.setOnAction(event -> {
@@ -160,6 +162,8 @@ public class MainController {
         });
     }
 
+    public Button getCreateTaskButton() { return createTaskButton; }
+
     public void setCreateTaskButton() {
         createTaskButton.setOnAction(event -> {
             try {
@@ -183,6 +187,8 @@ public class MainController {
         });
     }
 
+    public Button getDeleteTaskButton() { return deleteTaskButton; }
+
     public void setDeleteTaskButton() {
         deleteTaskButton.disableProperty().bind(tasksTableView.getSelectionModel().selectedItemProperty().isNull());
         deleteTaskButton.setOnAction(event -> {
@@ -192,6 +198,8 @@ public class MainController {
             }
         });
     }
+
+    public Button getStartTaskButton() { return startTaskButton; }
 
     public void setStartTaskButton() {
         startTaskButton.setDisable(true);
@@ -206,6 +214,8 @@ public class MainController {
         });
     }
 
+    public Button getPauseTaskButton() { return pauseTaskButton; }
+
     public void setPauseTaskButton() {
         pauseTaskButton.setDisable(true);
         pauseTaskButton.setOnAction(event -> {
@@ -218,6 +228,8 @@ public class MainController {
             }
         });
     }
+
+    public Button getStopTaskButton() { return stopTaskButton; }
 
     public void setStopTaskButton() {
         stopTaskButton.setDisable(true);
@@ -254,6 +266,8 @@ public class MainController {
         progressColumn.setCellFactory(cellFactory);
     }
 
+    public Button getEditWorkerButton() { return editWorkerButton; }
+
     public void setEditWorkerButton() {
         editWorkerButton.disableProperty().bind(workersTableView.getSelectionModel().selectedItemProperty().isNull());
         editWorkerButton.setOnAction(event -> {
@@ -278,6 +292,8 @@ public class MainController {
         });
     }
 
+    public Button getCreateWorkerButton() { return createWorkerButton; }
+
     public void setCreateWorkerButton() {
         createWorkerButton.setOnAction(event -> {
             try {
@@ -298,6 +314,8 @@ public class MainController {
             }
         });
     }
+
+    public Button getDeleteWorkerButton() { return deleteWorkerButton; }
 
     public void setDeleteWorkerButton() {
         deleteWorkerButton.disableProperty().bind(workersTableView.getSelectionModel().selectedItemProperty().isNull());
